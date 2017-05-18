@@ -16,17 +16,15 @@ LINEAGE-14.1-20170518-UNOFFICIAL
 <div id="page-body">
 <h1>Changelog</h1>
 <p>
-<ul>
-<li>CMActions: Add option to pulse only if device is on a flat surface</li>
-<li>System: Reduce camcorder mic volume to limit sound distortion</li>
-<li>System: FS: Change Cache partition to F2FS.
-[NOTICE: You have to format the Cache partition to F2FS through TWRP recovery after installing the zip and before rebooting. Otherwise the device won't boot]
- </li>
+</p><ul>
+<li>Kernel: Only expose su when daemon is running</li>
+<li>Kernel: f2fs: Sync with upstream f2fs-stable 3.10.y [taken from g-pl's kernel repository]</li>
+<li>System: Change cache and data partitions to f2fs</li>
+<li>System: Kill Gello Browser and introduce Jelly as an alternative lightweight browser</li>
+<li>System: Introduce Update Notify Service</li>
 </ul>
+<p><strong>NOTICE: </strong> A full wipe will be needed in order to install the latest package, due to the change of partitions to f2fs. Please read <a href="https://forum.xda-developers.com/showpost.php?p=72341151&amp;postcount=300">this</a> post for more information.
 </p>
-<div id="buttonbar">
-<a href="index.html" class="button">Download And Install Manually</a>
-</div>
 </div>
 </div>
 </body>
