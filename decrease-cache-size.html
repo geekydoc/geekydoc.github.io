@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Bungee" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<div id="header">
+<div id="page-title">
+LG L FINO HACKING
+</div>
+<div id="navibar">
+</div>
+</div>
+<div id="page-body">
+<h1>Decrease Cache Partition Size</h1>
+<p>L Fino's internal storage partition scheme leaves only minimal amounts of storage for installing apps. On the latest versions of LineageOS port, cache partition (around 260mb in size) is not actually used by anything on the system, so it could easily be reduced to a much smaller size with the extra space given to the userdata partition.</p>
+<p>After successfully changing the partition layout, you will not have to repeat this procedure for any reason. Future LineageOS builds will be compatible with the change. You might need to revert the changes if you would like to install a stock based rom.</p>
+<p> <strong>NOTICE:</strong> By changing the internal partition layout, you will loose all the data saved on the internal storage of your device. Remember to make a backup of your data before proceeding. Changing the internal storage partition table is considered dangerous. If something goes wrong, you might need to get back to stock rom using the LG Flash Tool to fix the device. There is also the possibility of a <strong>hard-brick</strong>. Please continue at your own risk. The author of this text will not share any responsibilty for any damage that might be caused by following this guide.</p>
+<h2>Part One: Get and install the parted binary</h2>
+<p>This guide is using the GNU parted tool to manage the internal storage partitions. You can get a precompiled binary <a href="http://iwf1.com/iwf-repo/parted.rar">here</a>.<br>
+Save the binary to the internal storage of you device (You can save it anywhere you like, just modify the following commands accordingly)<br>
+Next you need to push the binary to the device's system partition. This can be done either through the terminal app or through an adb shell.<br>
+Enter the adb shell/terminal app and apply the following commands:<br>
+<div id="codebox">
+<p>su</p>
+<p>mount -o remount,rw /system</p>
+<p>mv /storage/emulated/0/parted /system/bin/</p>
+<p>chmod +x /system/bin/parted</p>
+</div>
+<h2> Part Two: Run parted and modify partitions </h2>
+<p>Reboot the device into Recovery. Mount the system partition so the parted tool will be found by the shell. Then connect again to the device through an adb shell or enter the TWRP's terminal emulator(under "advanced" menu).<br>
+Execute the parted binary:</p>
+<div id="codebox">
+<p>parted /dev/block/mmcblk0</p>
+</div>
+<p> You will then be introduced to the parted command line:</p>
+<div id="codebox">
+<p>parted /dev/block/mmcblk0<br>
+GNU Parted 1.8.8.1.179-aef3<br>
+Using /dev/block/mmcblk0<br>
+Welcome to GNU Parted! Type 'help' to view a list of commands.<br>
+(parted)<br>
+</p>
+</div>
+<p>Hit p and then enter to see the disk's partition table. We are interested in the following:</p>
+<div id="codebox">
+<pre>
+32      394MB   1967MB  1572MB  ext4         system
+33      1967MB  2229MB  262MB   ext4         cache
+34      2229MB  3873MB  1644MB		         userdata
+35      3876MB  3909MB  33.5MB               grow
+</pre>
+</div>
+<p>The first column is the partition number, the second column is the start byte of the partition, third column is the stop byte of the partition and the last column is the name of the partition. Mark the partition numbers of cache and userdata partitions (33 and 34 in this case). We will now remove these partitions. Issue the following commands: </p>
+<div id="codebox">
+<pre>
+rm 33
+rm 34
+</pre>
+</div>
+<p>Change units to bytes and print the partition table again:</p>
+<div id="codebox">
+<pre>
+unit b
+p
+</pre>
+</div>
+<p> We are now going to recreate the cache and userdata partitions. Each partition must be starting at least one byte after the stop byte of previous partition and must stop at least one byte before the start byte of the next partition. Let's assume that we need a cache partition of 20mb size (20971520 bytes). So, the start byte of the partition will be 1966604288 and stop byte will be 1987575808 (1966604288 + 20971520). <strong>These values might be different on your device, so do not just copy/paste the values. Calculate the correct values based on you device configuration.</strong> Make the partition using the following command:</p>
+<div id="codebox">
+<pre>
+mkpart primary 1966604288 1987575808
+</pre>
+</div>
+<p> Userdata partition will have to start on byte 1987575809 on our case. On stock configuration it ends 3mb before the grow partition, I choose to end it there as well. This will be byte 3873000447. Make the partition with the following command:</p>
+<div id="codebox">
+<pre>
+mkpart primary 1987575809 3873000447
+</pre>
+</div>
+<p>Next we need to name the partitions: </p>
+<div id="codebox">
+<pre>
+name 33 cache
+name 34 userdata
+</pre>
+</div>
+<p>Exit the shell/terminal and format the partitions through TWRP recovery. Cache should be formatted to ext4 and Userdata to f2fs for them to work on LineageOS. To format partitions on TWRP, go to Wipe -> Advanced Wipe -> Select the Partition -> Repair or Change -> Change Filesystem </p>
+<p>Reboot into System and enjoy the additional space on internal storage.</p>
+<div id="references">
+<h2>References</h2>
+<ul>
+<li><a href="https://iwf1.com/how-to-re-partition-your-android-tablet-or-smartphone-all-options-included-change-size-fs-type-etc/">IWF1:How To: Re-partition Your Android Tablet Or Smartphone?</a></li>
+<li>XDA member @carmeloamg 's repartitioning work on CyanogenMOD 13.0 and LineageOS 14.1 ports on LG L Fino</li>
+</ul>
+</div>
+</div>
+<div id="footer">
+<p>To see this page properly, your browser must support HTML5. Internet Exporer is not supported.</p>
+<p>© 2017 Geekydoc</p>
+</div>
+</body>
+</html>
