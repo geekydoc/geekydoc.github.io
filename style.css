@@ -25,6 +25,7 @@ body {
 h1 {
 	width:50%;
 	background-color:#ffffff;
+	font-size:150%;
 	padding:5px;
 	font-weight:bolder;
 	color:#24292e;
@@ -35,6 +36,7 @@ h1 {
 
 h2 {
 	width:50%;
+	font-size:120%;
 	font-weight:bolder;
 	padding-left:0;
 	color:#24292e;
@@ -43,13 +45,13 @@ h2 {
 }
 
 a.button {
-    background-color: #ffffff;
-    border: 1px solid #24292e;
-    color: #24292e;
-    padding: 0.4% 0.7%;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
+	background-color: #ffffff;
+	border: 1px solid #24292e;
+	color: #24292e;
+	padding: 0.4% 0.7%;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
 }
 
 table {
@@ -96,11 +98,11 @@ td:last-child {
 
 
 #navibar ul {
-    color: #FFFFFF;
+	color: #FFFFFF;
 	padding:10px;
-    background-color: #24292e;
-    list-style-type: none;
-    font-weight: bolder;
+	background-color: #24292e;
+	list-style-type: none;
+	font-weight: bolder;
 }
 #navibar li {
 	display: inline;
